@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-rCA2D+D9QXuP2TomtQwd+uP50EHjpafN+wruul0sXZzX/Da7Txn4tB9aLMZV4DZm" crossorigin="anonymous">
+    <title>Planet Disco</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Planet Disco</h1>
+
+        <p>Enter the start and end destination code and submit!</p>
+
+        <form id="calculator-form" method="POST" action="" class="pb-4">
+
+            <div class="row">
+                <div class="col-2">
+                    <label for="sourceKey">Origin:</label>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="sourceKey" placeholder="Origin..." />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-2">
+                    <label for="destinationKey">Destination:</label>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="destinationKey" placeholder="Destination..." />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </div>
+
+        </form>
+
+        <div class="card text-white bg-success mb-3" style="max-width: 20rem; display: none;" id="success-card">
+            <div class="card-body">
+                <h4 class="card-title" id="success-title"></h4>
+                <p class="card-text" id="success-text"></p>
+            </div>
+        </div>
+
+        <div class="card text-white bg-warning mb-3" style="max-width: 20rem; display: none;" id="error-card">
+            <div class="card-body">
+                <h4 class="card-title" id="error-title"></h4>
+                <p class="card-text" id="error-text"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#success-card').hide()            
+            $('#error-card').hide()
+
+            $('#calculator-form').submit(function (e) {
+                e.preventDefault()
+
+                let payload = {
+                    sourceKey: $('input[name="sourceKey"]').val(),
+                    destinationKey: $('input[name="destinationKey"]').val()
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:8080/api/distance/calculate',
+                    data: JSON.stringify(payload),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function(e){ 
+                        displaySuccess(e)
+                    },
+                    error: function(e){
+                        displayError(e.responseJSON)
+                    }
+                });
+            })
+        })
+
+        function displaySuccess(data) {
+            $('#error-card').hide()
+
+            $('#success-title').text('Distance: ' + data.distance)
+            $('#success-text').text(data.route.join(' -> '))
+            $('#success-card').show()
+        }
+
+        function displayError(data) {
+            console.log(data)
+            $('#success-card').hide()
+
+            $('#error-title').text(data.error)
+            $('#error-text').text(data.message)
+            $('#error-card').show()
+        }
+
+    </script>
+</body>
+
+</html>

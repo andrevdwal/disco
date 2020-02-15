@@ -10,6 +10,7 @@ import za.co.discovery.assignment.andrevdwal.distancecalculator.DistanceCalculat
 import za.co.discovery.assignment.andrevdwal.dto.DistanceCalculateRequestDto;
 import za.co.discovery.assignment.andrevdwal.dto.DistanceCalculateResponseDto;
 
+
 @RestController
 @RequestMapping(path = "api/distance")
 public class DistanceController {
@@ -18,8 +19,7 @@ public class DistanceController {
 	private DistanceCalculatorService distanceCalculatorService;
 
 	@PostMapping(path = "/calculate", consumes = "application/json", produces = "application/json")
-	public DistanceCalculateResponseDto calculate(@RequestBody DistanceCalculateRequestDto calculateRequest)
-			throws Exception {
+	public DistanceCalculateResponseDto calculate(@RequestBody DistanceCalculateRequestDto calculateRequest) throws Exception {
 
 		DistanceCalculateResponseDto resp = distanceCalculatorService.calculate(calculateRequest);
 
