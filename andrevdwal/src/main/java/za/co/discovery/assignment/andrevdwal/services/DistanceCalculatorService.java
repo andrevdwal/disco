@@ -1,4 +1,4 @@
-package za.co.discovery.assignment.andrevdwal.distancecalculator;
+package za.co.discovery.assignment.andrevdwal.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import za.co.discovery.assignment.andrevdwal.distancecalculator.DistanceCalculator;
+import za.co.discovery.assignment.andrevdwal.distancecalculator.Graph;
+import za.co.discovery.assignment.andrevdwal.distancecalculator.Node;
+import za.co.discovery.assignment.andrevdwal.distancecalculator.ShortestPath;
 import za.co.discovery.assignment.andrevdwal.dto.DistanceCalculateRequestDto;
 import za.co.discovery.assignment.andrevdwal.dto.DistanceCalculateResponseDto;
 import za.co.discovery.assignment.andrevdwal.repositories.Planet;

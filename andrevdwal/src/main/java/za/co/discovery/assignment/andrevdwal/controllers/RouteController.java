@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import za.co.discovery.assignment.andrevdwal.dto.RouteDto;
+import za.co.discovery.assignment.andrevdwal.dto.ServiceResponseDto;
+import za.co.discovery.assignment.andrevdwal.dto.ServiceResponseFactory;
 import za.co.discovery.assignment.andrevdwal.mappers.Mapper;
 import za.co.discovery.assignment.andrevdwal.repositories.Route;
 import za.co.discovery.assignment.andrevdwal.services.RouteService;
@@ -23,14 +25,14 @@ public class RouteController {
 	private RouteService routeService;
 
 	@GetMapping("/{id}")
-	public RouteDto get(@PathVariable("id") long id) throws BadRequestException {
+	public ServiceResponseDto<RouteDto> get(@PathVariable("id") long id) {
 
 		Route result = routeService.getRoute(id);
 		RouteDto dto = Mapper.map(result);
 
 		if (dto == null)
-			throw new BadRequestException("Not found");
-		return dto;
+			return new ServiceResponseFactory().notFound();
+		return new ServiceResponseFactory().ok(dto);
 	}
 
 	@DeleteMapping("/{id}")
@@ -40,24 +42,24 @@ public class RouteController {
 	}
 
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public RouteDto create(@RequestBody RouteDto routeDto) throws BadRequestException {
+	public ServiceResponseDto<RouteDto> create(@RequestBody RouteDto routeDto) {
 
 		Route result = routeService.createRoute(routeDto);
 		RouteDto respDto = Mapper.map(result);
 
 		if (respDto == null)
-			throw new BadRequestException("Cannot create");
-		return respDto;
+			return new ServiceResponseFactory().badRequest("Cannot create");
+		return new ServiceResponseFactory().ok(respDto);
 	}
 
 	@PutMapping(consumes = "application/json", produces = "application/json")
-	public RouteDto update(@RequestBody RouteDto routeDto) throws BadRequestException {
+	public ServiceResponseDto<RouteDto> update(@RequestBody RouteDto routeDto) {
 
 		Route result = routeService.updateRoute(routeDto);
 		RouteDto respDto = Mapper.map(result);
 
 		if (respDto == null)
-			throw new BadRequestException("Cannot update");
-		return respDto;
+			return new ServiceResponseFactory().badRequest("Cannot update");
+		return new ServiceResponseFactory().ok(respDto);
 	}
 }

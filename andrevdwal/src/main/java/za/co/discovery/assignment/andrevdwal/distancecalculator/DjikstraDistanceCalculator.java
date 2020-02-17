@@ -7,15 +7,16 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 class DjikstraDistanceCalculator implements DistanceCalculator {
-	
+
 	@Override
 	public ShortestPath calculate(Graph graph, String sourceKey, String destinationKey) {
 
-		// TODO: A design shortcoming means we are changing the graph instance which do not belong to us
+		// TODO: A design shortcoming means we are changing the graph instance which do
+		// not belong to us
 		// We can either clone or rethink the design
 		determineShortestDistancesToSource(graph, sourceKey);
 		ShortestPath result = determineShortestPath(graph, sourceKey, destinationKey);
@@ -42,9 +43,9 @@ class DjikstraDistanceCalculator implements DistanceCalculator {
 			for (Entry<String, Double> neighbourEntry : nodeWeAreVisiting.getNeighbourDistances().entrySet()) {
 
 				Node neighbourNode = graph.get(neighbourEntry.getKey());
-				if(neighbourNode == null)
+				if (neighbourNode == null)
 					continue;
-				
+
 				double distanceToNeighbour = neighbourEntry.getValue();
 
 				// if the new calculated distance to source for the neighbour is less than what
@@ -81,13 +82,13 @@ class DjikstraDistanceCalculator implements DistanceCalculator {
 		List<Node> nodes = new ArrayList<Node>();
 
 		Node sourceNode = graph.get(source);
-		if(sourceNode == null)
+		if (sourceNode == null)
 			return null;
-		
+
 		Node destNode = graph.get(dest);
-		if(destNode == null)
+		if (destNode == null)
 			return null;
-		
+
 		Node currentNode = destNode;
 		double distanceToSource = currentNode.getDistanceToSource();
 

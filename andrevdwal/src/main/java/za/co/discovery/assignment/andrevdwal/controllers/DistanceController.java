@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import za.co.discovery.assignment.andrevdwal.distancecalculator.DistanceCalculatorService;
 import za.co.discovery.assignment.andrevdwal.dto.DistanceCalculateRequestDto;
 import za.co.discovery.assignment.andrevdwal.dto.DistanceCalculateResponseDto;
-
+import za.co.discovery.assignment.andrevdwal.dto.ServiceResponseDto;
+import za.co.discovery.assignment.andrevdwal.dto.ServiceResponseFactory;
+import za.co.discovery.assignment.andrevdwal.services.DistanceCalculatorService;
 
 @RestController
 @RequestMapping(path = "api/distance")
@@ -19,13 +20,14 @@ public class DistanceController {
 	private DistanceCalculatorService distanceCalculatorService;
 
 	@PostMapping(path = "/calculate", consumes = "application/json", produces = "application/json")
-	public DistanceCalculateResponseDto calculate(@RequestBody DistanceCalculateRequestDto calculateRequest) throws Exception {
+	public ServiceResponseDto<DistanceCalculateResponseDto> calculate(
+			@RequestBody DistanceCalculateRequestDto calculateRequest) throws Exception {
 
 		DistanceCalculateResponseDto resp = distanceCalculatorService.calculate(calculateRequest);
 
 		if (resp == null)
-			throw new BadRequestException("Route not found");
+			return new ServiceResponseFactory().badRequest("Route not found");
 
-		return resp;
+		return new ServiceResponseFactory().ok(resp);
 	}
 }

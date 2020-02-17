@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import za.co.discovery.assignment.andrevdwal.dto.PlanetDto;
+import za.co.discovery.assignment.andrevdwal.dto.ServiceResponseDto;
+import za.co.discovery.assignment.andrevdwal.dto.ServiceResponseFactory;
 import za.co.discovery.assignment.andrevdwal.mappers.Mapper;
 import za.co.discovery.assignment.andrevdwal.repositories.Planet;
 import za.co.discovery.assignment.andrevdwal.services.PlanetService;
@@ -23,14 +25,14 @@ public class PlanetController {
 	private PlanetService planetService;
 
 	@GetMapping("/{id}")
-	public PlanetDto get(@PathVariable("id") String id) throws BadRequestException {
+	public ServiceResponseDto<PlanetDto> get(@PathVariable("id") String id) {
 
 		Planet result = planetService.getPlanet(id);
 		PlanetDto dto = Mapper.map(result);
-
+		
 		if (dto == null)
-			throw new BadRequestException("Not found");
-		return dto;
+			return new ServiceResponseFactory().notFound();
+		return new ServiceResponseFactory().ok(dto);
 	}
 
 	@DeleteMapping("/{id}")
@@ -41,24 +43,24 @@ public class PlanetController {
 	}
 
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public PlanetDto create(@RequestBody PlanetDto planetDto) throws BadRequestException {
+	public ServiceResponseDto<PlanetDto> create(@RequestBody PlanetDto planetDto) {
 
 		Planet result = planetService.createPlanet(planetDto);
 		PlanetDto respDto = Mapper.map(result);
 
 		if (respDto == null)
-			throw new BadRequestException("Cannot create");
-		return respDto;
+			return new ServiceResponseFactory().badRequest("Cannot create");
+		return new ServiceResponseFactory().ok(respDto);
 	}
 
 	@PutMapping(consumes = "application/json", produces = "application/json")
-	public PlanetDto update(@RequestBody PlanetDto planetDto) throws BadRequestException {
+	public ServiceResponseDto<PlanetDto> update(@RequestBody PlanetDto planetDto) {
 
 		Planet result = planetService.updatePlanet(planetDto);
 		PlanetDto respDto = Mapper.map(result);
 
 		if (respDto == null)
-			throw new BadRequestException("Cannot update");
-		return respDto;
+			return new ServiceResponseFactory().badRequest("Cannot update");
+		return new ServiceResponseFactory().ok(respDto);
 	}
 }

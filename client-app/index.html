@@ -89,15 +89,22 @@
         })
 
         function displaySuccess(data) {
-            $('#error-card').hide()
+            if(data.success) {
+                $('#error-card').hide()
 
-            $('#success-title').text('Distance: ' + data.distance)
-            $('#success-text').text(data.route.join(' -> '))
-            $('#success-card').show()
+                $('#success-title').text('Distance: ' + data.payload.distance)
+                $('#success-text').text(data.payload.route.join(' -> '))
+                $('#success-card').show()
+            } else {
+                $('#success-card').hide()
+
+                $('#error-title').text("Error: " + data.status)
+                $('#error-text').text(data.description)
+                $('#error-card').show()    
+            }
         }
 
         function displayError(data) {
-            console.log(data)
             $('#success-card').hide()
 
             $('#error-title').text(data.error)
