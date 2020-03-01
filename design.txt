@@ -7,7 +7,8 @@ Task outline and comments:
 
 1.	Persist the Graph into an in-memory database
 
-The application uses Derby (embedded). Data takeon happens on startup with the schema.sql and import.sql scripts. 
+The application uses Derby (embedded). Data takeon happens on startup with the schema.sql and import.sql scripts.
+I had some issues with the foreign key mappings so omitted them. I would never create a database this way in a real world application. 
 
 
 2.	Read the file and import it into the DB
@@ -20,6 +21,12 @@ there is an Apache library for this.
 
 http://localhost:8080/api/planets
 http://localhost:8080/api/routes
+
+The responses either return HTTP 200 or HTTP 5xx. The 200 responses contain a statusCode property mapped to HTTP codes to indicate
+either success or that the operation could not be performed because either an entity was not found or similar. I did it this way because if an entity
+is not found, for example, I did not want to return a 404 because that may be interpreted as the endpoint not being found.
+
+In a production environment I would follow the established guidelines of domain or establish one (as close to industry standard as possible).
 
 
 4.	Implement the algorithm

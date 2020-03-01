@@ -26,6 +26,8 @@ public class DistanceController {
 		DistanceCalculateResponseDto resp = distanceCalculatorService.calculate(calculateRequest);
 
 		if (resp == null)
+			// "badRequest" to set the status code in the response object but still treated as a 200. This is
+			// not a CRUD operation so not point in returning a 400 - the request was valid.
 			return new ServiceResponseFactory().badRequest("Route not found");
 
 		return new ServiceResponseFactory().ok(resp);

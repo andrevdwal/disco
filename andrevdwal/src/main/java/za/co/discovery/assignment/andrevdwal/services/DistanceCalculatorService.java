@@ -2,7 +2,6 @@ package za.co.discovery.assignment.andrevdwal.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,18 +13,20 @@ import za.co.discovery.assignment.andrevdwal.distancecalculator.ShortestPath;
 import za.co.discovery.assignment.andrevdwal.dto.DistanceCalculateRequestDto;
 import za.co.discovery.assignment.andrevdwal.dto.DistanceCalculateResponseDto;
 import za.co.discovery.assignment.andrevdwal.repositories.Planet;
-import za.co.discovery.assignment.andrevdwal.repositories.PlanetRepository;
-import za.co.discovery.assignment.andrevdwal.repositories.RouteRepository;
 
 @Service
 public class DistanceCalculatorService {
 
-	@Autowired
-	private PlanetRepository planetRepository;
-	@Autowired
-	private RouteRepository routeRepository;
-	@Autowired
+	private PlanetService planetService;
+	private RouteService routeService;
 	private DistanceCalculator calculator;
+	
+	@Autowired
+	public DistanceCalculatorService(PlanetService planetService, RouteService routeService, DistanceCalculator calculator) {
+		this.planetService = planetService;
+		this.routeService = routeService;
+		this.calculator = calculator;
+	}
 
 	public DistanceCalculateResponseDto calculate(DistanceCalculateRequestDto request) {
 
@@ -39,21 +40,21 @@ public class DistanceCalculatorService {
 		DistanceCalculateResponseDto resp = new DistanceCalculateResponseDto();
 
 		String sourceKey = result.getSource() == null ? null : result.getSource().getKey();
-		Optional<Planet> sourcePlanet = planetRepository.findById(sourceKey);
+		Planet sourcePlanet = planetService.getPlanet(sourceKey);
 
 		String destinationKey = result.getDestination() == null ? null : result.getDestination().getKey();
-		Optional<Planet> destinationPlanet = planetRepository.findById(destinationKey);
+		Planet destinationPlanet = planetService.getPlanet(destinationKey);
 
-		if (!sourcePlanet.isPresent() || !destinationPlanet.isPresent())
+		if (sourcePlanet == null || destinationPlanet == null)
 			return null;
 
-		resp.setSourceName(sourcePlanet.get().getName());
-		resp.setDestinationName(destinationPlanet.get().getName());
+		resp.setSourceName(sourcePlanet.getName());
+		resp.setDestinationName(destinationPlanet.getName());
 
 		List<String> route = new ArrayList<String>();
 		for (Node n : result.getNodes()) {
-			Optional<Planet> hop = planetRepository.findById(n.getKey());
-			route.add(hop.get().getName());
+			Planet hop = planetService.getPlanet(n.getKey());
+			route.add(hop.getName());
 		}
 		resp.setRoute(route);
 
@@ -66,7 +67,9 @@ public class DistanceCalculatorService {
 
 		Graph graph = new Graph();
 
-		routeRepository.findAll().forEach(route -> {
+		
+		
+		routeService.getAllRoutes().forEach(route -> {
 
 			if (!graph.containsKey(route.getOriginID()))
 				graph.put(route.getOriginID(), new Node(route.getOriginID()));

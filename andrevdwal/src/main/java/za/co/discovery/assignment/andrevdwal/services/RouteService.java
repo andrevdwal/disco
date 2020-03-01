@@ -15,9 +15,13 @@ import za.co.discovery.assignment.andrevdwal.repositories.RouteRepository;
 @Service
 public class RouteService {
 
-	@Autowired
 	private RouteRepository routeRepository;
 
+	@Autowired
+	public RouteService(RouteRepository routeRepository) {
+		this.routeRepository = routeRepository;
+	}
+	
 	public List<Route> getAllRoutes() {
 
 		List<Route> routes = new ArrayList<Route>();

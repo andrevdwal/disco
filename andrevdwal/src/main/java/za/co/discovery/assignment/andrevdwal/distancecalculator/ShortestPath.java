@@ -1,6 +1,5 @@
 package za.co.discovery.assignment.andrevdwal.distancecalculator;
 
-import java.util.Collection;
 import java.util.List;
 
 public class ShortestPath {
@@ -15,10 +14,6 @@ public class ShortestPath {
 		this.distance = distance;
 		this.source = nodes.get(0);
 		this.destination = nodes.get(nodes.size() - 1);
-	}
-
-	public Collection<Node> getPath() {
-		return nodes;
 	}
 
 	public double getDistance() {

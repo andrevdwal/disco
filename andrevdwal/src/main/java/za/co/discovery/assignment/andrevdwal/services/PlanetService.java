@@ -17,10 +17,14 @@ import za.co.discovery.assignment.andrevdwal.repositories.RouteRepository;
 @Service
 public class PlanetService {
 
-	@Autowired
 	private PlanetRepository planetRepository;
-	@Autowired
 	private RouteRepository routeRepository;
+	
+	@Autowired
+	public PlanetService(PlanetRepository planetRepository, RouteRepository routeRepository) {
+		this.planetRepository = planetRepository;
+		this.routeRepository = routeRepository;
+	}
 
 	public List<Planet> getAllPlanets() {
 

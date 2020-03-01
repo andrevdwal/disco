@@ -28,6 +28,8 @@ class DjikstraDistanceCalculator implements DistanceCalculator {
 
 		// get the source node instance and default the distance to itself to 0
 		Node sourceNode = graph.get(sourceKey);
+		if(sourceNode == null)
+			return;
 		sourceNode.addDistanceToSource(sourceNode.getKey(), 0);
 
 		// add it to the list of nodes to visit next
